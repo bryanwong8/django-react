@@ -1,117 +1,122 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import axios from "axios";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewCompleted: false,
-      todoList: [],
-      modal: false,
-      activeItem: {
-        title: "",
-        description: "",
-        completed: false,
-      },
+
+const App = () => {
+  const [viewCompleted, setViewCompleted] = useState(false);
+  const [todoList, setTodoList] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [activeItem, setActiveItem] = useState({
+    title: "",
+    description: "",
+    completed: false,
+  });
+
+  useEffect(() => {
+    const getList = async () => {
+      try {
+        const response = await axios.get("/api/todos");
+        setTodoList(response.data);
+      } catch (err) {
+        console.log(err)
+      }
     };
-  }
 
-  componentDidMount() {
-    this.refreshList();
-  }
+    getList()
+  }, []);
 
-  refreshList = () => {
-    axios
-      .get("/api/todos")
-      .then((res) => this.setState({ todoList: res.data }))
-      .catch((err) => console.log(err));
+  const toggle = () => {
+    setModal(!modal);
   };
 
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
-  };
-
-  handleSubmit = (item) => {
-    this.toggle();
+  const handleSubmit = async (item) => {
+    toggle();
 
     if (item.id) {
-      axios
-        .put(`/api/todos/${item.id}/`, item)
-        .then((res) => this.refreshList());
+      const response = await axios.put(`/api/todos/${item.id}/`, item)
+      const editedList = todoList.map(currItem => {
+        if (currItem.id === response.data.id) {
+          return response.data;
+        }
+
+        return currItem
+      });
+
+      setTodoList(editedList);
+
       return;
     }
-    axios
-      .post("/api/todos/", item)
-      .then((res) => this.refreshList());
+
+    const response = await axios.post("/api/todos/", item)
+    setTodoList(prevState => [...prevState, response.data])
   };
 
-  handleDelete = (item) => {
-    axios
-      .delete(`/api/todos/${item.id}/`)
-      .then((res) => this.refreshList());
+  const handleDelete = async (item) => {
+    await axios.delete(`/api/todos/${item.id}/`)
+    setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
 
-  createItem = () => {
+  const createItem = () => {
     const item = { title: "", description: "", completed: false };
 
-    this.setState({ activeItem: item, modal: !this.state.modal });
+    setModal(item);
+    setModal(!modal);
   };
 
-  editItem = (item) => {
-    this.setState({ activeItem: item, modal: !this.state.modal });
+  const editItem = (item) => {
+    setActiveItem(item);
+    setModal(!modal)
   };
 
-  displayCompleted = (status) => {
+  const displayCompleted = (status) => {
     if (status) {
-      return this.setState({ viewCompleted: true });
+      return setViewCompleted(true)
     }
 
-    return this.setState({ viewCompleted: false });
+    return setViewCompleted(false)
   };
 
-  render() {
-    return (
-      <main className="container">
-        <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
-        <div className="row">
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-              <div className="mb-4">
-                <button
-                  className="btn btn-primary"
-                  onClick={this.createItem}
-                >
-                  Add task
-                </button>
-              </div>
-              <TabList 
-                viewCompleted={this.state.viewCompleted}
-                displayCompleted={this.displayCompleted}
-              />
-              <ul className="list-group list-group-flush border-top-0">
-                <TableItems 
-                  todoList={this.state.todoList}
-                  viewCompleted={this.state.viewCompleted}
-                  editItem={this.editItem}
-                  handleDelete={this.handleDelete}
-                />
-              </ul>
+  return (
+    <main className="container">
+      <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
+      <div className="row">
+        <div className="col-md-6 col-sm-10 mx-auto p-0">
+          <div className="card p-3">
+            <div className="mb-4">
+              <button
+                className="btn btn-primary"
+                onClick={createItem}
+              >
+                Add task
+              </button>
             </div>
+            <TabList
+              viewCompleted={viewCompleted}
+              displayCompleted={displayCompleted}
+            />
+            <ul className="list-group list-group-flush border-top-0">
+              <TableItems
+                todoList={todoList}
+                viewCompleted={viewCompleted}
+                editItem={editItem}
+                handleDelete={handleDelete}
+              />
+            </ul>
           </div>
         </div>
-        {this.state.modal ? (
-          <CustomModal
-            activeItem={this.state.activeItem}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
-          />
-        ) : null}
-      </main>
-    );
-  }
+      </div>
+      {modal ? (
+        <CustomModal
+          activeItem={activeItem}
+          toggle={toggle}
+          onSave={handleSubmit}
+        />
+      ) : null}
+    </main>
+  )
 }
 
 export default App;
