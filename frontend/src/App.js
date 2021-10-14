@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CustomModal from "./components/Modal";
+import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import axios from "axios";
 
@@ -71,62 +72,6 @@ class App extends Component {
     return this.setState({ viewCompleted: false });
   };
 
-  renderTabList = () => {
-    return (
-      <div className="nav nav-tabs">
-        <span
-          onClick={() => this.displayCompleted(true)}
-          className={this.state.viewCompleted ? "nav-link active" : "nav-link"}
-        >
-          Complete
-        </span>
-        <span
-          onClick={() => this.displayCompleted(false)}
-          className={this.state.viewCompleted ? "nav-link" : "nav-link active"}
-        >
-          Incomplete
-        </span>
-      </div>
-    );
-  };
-
-  renderItems = () => {
-    const { viewCompleted } = this.state;
-    const newItems = this.state.todoList.filter(
-      (item) => item.completed === viewCompleted
-    );
-
-    return newItems.map((item) => (
-      <li
-        key={item.id}
-        className="list-group-item d-flex justify-content-between align-items-center"
-      >
-        <span
-          className={`todo-title mr-2 ${
-            this.state.viewCompleted ? "completed-todo" : ""
-          }`}
-          title={item.description}
-        >
-          {item.title}
-        </span>
-        <span>
-          <button
-            className="btn btn-secondary mr-2"
-            onClick={() => this.editItem(item)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => this.handleDelete(item)}
-          >
-            Delete
-          </button>
-        </span>
-      </li>
-    ));
-  };
-
   render() {
     return (
       <main className="container">
@@ -142,13 +87,17 @@ class App extends Component {
                   Add task
                 </button>
               </div>
-              {/* {this.renderTabList()} */}
               <TabList 
-                viewCompleted={this.viewCompleted}
+                viewCompleted={this.state.viewCompleted}
                 displayCompleted={this.displayCompleted}
               />
               <ul className="list-group list-group-flush border-top-0">
-                {this.renderItems()}
+                <TableItems 
+                  todoList={this.state.todoList}
+                  viewCompleted={this.state.viewCompleted}
+                  editItem={this.editItem}
+                  handleDelete={this.handleDelete}
+                />
               </ul>
             </div>
           </div>
