@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CustomModal from "./components/Modal";
+import TabList from "./components/TabList";
 import axios from "axios";
 
 class App extends Component {
@@ -141,7 +142,11 @@ class App extends Component {
                   Add task
                 </button>
               </div>
-              {this.renderTabList()}
+              {/* {this.renderTabList()} */}
+              <TabList 
+                viewCompleted={this.viewCompleted}
+                displayCompleted={this.displayCompleted}
+              />
               <ul className="list-group list-group-flush border-top-0">
                 {this.renderItems()}
               </ul>
