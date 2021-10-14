@@ -4,7 +4,6 @@ import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import axios from "axios";
 
-
 const App = () => {
   const [viewCompleted, setViewCompleted] = useState(false);
   const [todoList, setTodoList] = useState([]);
@@ -62,7 +61,7 @@ const App = () => {
   const createItem = () => {
     const item = { title: "", description: "", completed: false };
 
-    setModal(item);
+    setActiveItem(item);
     setModal(!modal);
   };
 
