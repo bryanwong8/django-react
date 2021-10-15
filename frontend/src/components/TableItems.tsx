@@ -1,9 +1,16 @@
 import React from "react";
+import { TodoItem } from "../shared/types/Todo";
+interface TableItemsProps {
+  todoList: TodoItem[],
+  viewCompleted: boolean,
+  editItem: (item: TodoItem) => void,
+  handleDelete: (item: TodoItem) => void
+}
 
-const TableItems = (props) => {
+const TableItems = (props: TableItemsProps) => {
   const { viewCompleted } = props;
   const newItems = props.todoList.filter(
-    (item) => item.completed === viewCompleted
+    (item: TodoItem) => item.completed === viewCompleted
   );
 
   return newItems.map((item) => (

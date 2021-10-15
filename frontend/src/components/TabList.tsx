@@ -1,6 +1,11 @@
 import React from "react";
 
-const TabList = (props) => {
+interface TabListProps {
+  viewCompleted: boolean;
+  displayCompleted: (displayFlag: boolean) => void;
+}
+
+const TabList = (props: TabListProps) => {
   return (
     <div className="nav nav-tabs">
       <span
