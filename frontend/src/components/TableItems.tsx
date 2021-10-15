@@ -13,34 +13,38 @@ const TableItems = (props: TableItemsProps) => {
     (item: TodoItem) => item.completed === viewCompleted
   );
 
-  return newItems.map((item) => (
-    <li
-      key={item.id}
-      className="list-group-item d-flex justify-content-between align-items-center"
-    >
-      <span
-        className={`todo-title mr-2 ${props.viewCompleted ? "completed-todo" : ""
-          }`}
-        title={item.description}
-      >
-        {item.title}
-      </span>
-      <span>
-        <button
-          className="btn btn-secondary mr-2"
-          onClick={() => props.editItem(item)}
+  return (
+    <ul className="list-group list-group-flush border-top-0">
+      {newItems.map((item) => (
+        <li
+          key={item.id}
+          className="list-group-item d-flex justify-content-between align-items-center"
         >
-          Edit
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => props.handleDelete(item)}
-        >
-          Delete
-        </button>
-      </span>
-    </li>
-  ));
-};
+          <span
+            className={`todo-title mr-2 ${props.viewCompleted ? "completed-todo" : ""
+              }`}
+            title={item.description}
+          >
+            {item.title}
+          </span>
+          <span>
+            <button
+              className="btn btn-secondary mr-2"
+              onClick={() => props.editItem(item)}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => props.handleDelete(item)}
+            >
+              Delete
+            </button>
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 export default TableItems;
