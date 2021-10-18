@@ -10,12 +10,19 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import { TodoItem } from "../shared/types/Todo";
 
-const CustomModal = (props) => {
+interface ModalProps {
+  activeItem: TodoItem,
+  toggle: (modal: any) => void,
+  onSave: (item: TodoItem) => void,
+}
+
+const CustomModal = (props: ModalProps) => {
   const [activeItem, setActiveItem] = useState(props.activeItem);
   const { toggle, onSave } = props;
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     let { name, value } = e.target;
 
     if (e.target.type === "checkbox") {

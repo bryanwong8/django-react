@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
+import { TodoItem } from "./shared/types/Todo";
 import axios from "axios";
 
 const App = () => {
-  const [viewCompleted, setViewCompleted] = useState(false);
-  const [todoList, setTodoList] = useState([]);
-  const [modal, setModal] = useState(false);
-  const [activeItem, setActiveItem] = useState({
+  const [viewCompleted, setViewCompleted] = useState<boolean>(false);
+  const [todoList, setTodoList] = useState<TodoItem[]>([]);
+  const [modal, setModal] = useState<boolean>(false);
+  const [activeItem, setActiveItem] = useState<TodoItem>({
     title: "",
     description: "",
     completed: false,
@@ -20,18 +21,18 @@ const App = () => {
         const response = await axios.get("/api/todos");
         setTodoList(response.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     };
 
-    getList()
+    getList();
   }, []);
 
   const toggle = () => {
     setModal(!modal);
   };
 
-  const handleSubmit = async (item) => {
+  const handleSubmit = async (item: TodoItem) => {
     toggle();
 
     if (item.id) {
@@ -41,7 +42,7 @@ const App = () => {
           return response.data;
         }
 
-        return currItem
+        return currItem;
       });
 
       setTodoList(editedList);
@@ -53,7 +54,7 @@ const App = () => {
     setTodoList(prevState => [...prevState, response.data])
   };
 
-  const handleDelete = async (item) => {
+  const handleDelete = async (item: TodoItem) => {
     await axios.delete(`/api/todos/${item.id}/`)
     setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
@@ -65,12 +66,12 @@ const App = () => {
     setModal(!modal);
   };
 
-  const editItem = (item) => {
+  const editItem = (item: TodoItem) => {
     setActiveItem(item);
     setModal(!modal)
   };
 
-  const displayCompleted = (status) => {
+  const displayCompleted = (status: boolean) => {
     if (status) {
       return setViewCompleted(true)
     }
@@ -96,14 +97,12 @@ const App = () => {
               viewCompleted={viewCompleted}
               displayCompleted={displayCompleted}
             />
-            <ul className="list-group list-group-flush border-top-0">
-              <TableItems
-                todoList={todoList}
-                viewCompleted={viewCompleted}
-                editItem={editItem}
-                handleDelete={handleDelete}
-              />
-            </ul>
+            <TableItems
+              todoList={todoList}
+              viewCompleted={viewCompleted}
+              editItem={editItem}
+              handleDelete={handleDelete}
+            />
           </div>
         </div>
       </div>
