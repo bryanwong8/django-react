@@ -9,6 +9,10 @@ import {
   FormGroup,
   Input,
   Label,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
 import { TodoItem } from "../shared/types/Todo";
 
@@ -19,7 +23,9 @@ interface ModalProps {
 }
 
 const CustomModal = (props: ModalProps) => {
-  const [activeItem, setActiveItem] = useState(props.activeItem);
+  const [activeItem, setActiveItem] = useState<TodoItem>(props.activeItem);
+  const [dropdown, setDropdown] = useState<boolean>(false);
+  const dropdownToggle = () => setDropdown(prevState => !prevState);
   const { toggle, onSave } = props;
 
   const handleChange = (e: any) => {
@@ -31,6 +37,10 @@ const CustomModal = (props: ModalProps) => {
 
     setActiveItem(prevState => ({ ...prevState, [name]: value }));
   };
+
+  const handleDropdownChange = (choice: string) => {
+    setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
+  }
 
   return (
     <Modal isOpen={true} toggle={toggle}>
@@ -58,6 +68,18 @@ const CustomModal = (props: ModalProps) => {
               onChange={handleChange}
               placeholder="Enter Todo description"
             />
+          </FormGroup>
+          <FormGroup>
+            <Dropdown isOpen={dropdown} toggle={dropdownToggle}>
+              <DropdownToggle caret>
+                {activeItem.priority}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => handleDropdownChange("Low")}>Low</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange("Mid")}>Mid</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange("High")}>High</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </FormGroup>
           <FormGroup check>
             <Label check>
