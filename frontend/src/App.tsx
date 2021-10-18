@@ -4,6 +4,7 @@ import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const App = () => {
   const [viewCompleted, setViewCompleted] = useState<boolean>(false);
@@ -13,6 +14,7 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
+    priority: "LOW"
   });
 
   useEffect(() => {
@@ -33,10 +35,12 @@ const App = () => {
   };
 
   const handleSubmit = async (item: TodoItem) => {
+    const csrftoken = Cookies.get('csrftoken');
+
     toggle();
 
     if (item.id) {
-      const response = await axios.put(`/api/todos/${item.id}/`, item)
+      const response = await axios.put(`/api/todos/${item.id}/`, item, { headers: { 'X-CSRFToken': csrftoken } })
       const editedList = todoList.map(currItem => {
         if (currItem.id === response.data.id) {
           return response.data;
@@ -50,7 +54,7 @@ const App = () => {
       return;
     }
 
-    const response = await axios.post("/api/todos/", item)
+    const response = await axios.post("/api/todos/", item, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => [...prevState, response.data])
   };
 
@@ -60,7 +64,7 @@ const App = () => {
   };
 
   const createItem = () => {
-    const item = { title: "", description: "", completed: false };
+    const item = { title: "", description: "", completed: false, priority: "LOW" };
 
     setActiveItem(item);
     setModal(!modal);
