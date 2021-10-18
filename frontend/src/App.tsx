@@ -3,10 +3,13 @@ import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
+import { formatDate } from "./shared/utils/dates";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import "react-datepicker/dist/react-datepicker.css";
 
 const App = () => {
+  const csrftoken = Cookies.get('csrftoken');
   const [viewCompleted, setViewCompleted] = useState<boolean>(false);
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
   const [modal, setModal] = useState<boolean>(false);
@@ -14,7 +17,8 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
-    priority: "LOW"
+    priority: "LOW",
+    due_date: formatDate(new Date())
   });
 
   useEffect(() => {
@@ -35,8 +39,6 @@ const App = () => {
   };
 
   const handleSubmit = async (item: TodoItem) => {
-    const csrftoken = Cookies.get('csrftoken');
-
     toggle();
 
     if (item.id) {
@@ -59,12 +61,12 @@ const App = () => {
   };
 
   const handleDelete = async (item: TodoItem) => {
-    await axios.delete(`/api/todos/${item.id}/`)
+    await axios.delete(`/api/todos/${item.id}`, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
 
   const createItem = () => {
-    const item = { title: "", description: "", completed: false, priority: "LOW" };
+    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: formatDate(new Date()) };
 
     setActiveItem(item);
     setModal(!modal);

@@ -15,6 +15,8 @@ import {
   DropdownItem
 } from "reactstrap";
 import { TodoItem } from "../shared/types/Todo";
+import DatePicker from "react-datepicker";
+import { formatDate, stringToDate } from "../shared/utils/dates";
 
 interface ModalProps {
   activeItem: TodoItem,
@@ -40,6 +42,10 @@ const CustomModal = (props: ModalProps) => {
 
   const handleDropdownChange = (choice: string) => {
     setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
+  }
+
+  const handleDateChange = (date: Date) => {
+    setActiveItem(prevState => ({ ...prevState, due_date: formatDate(date) }))
   }
 
   return (
@@ -80,6 +86,9 @@ const CustomModal = (props: ModalProps) => {
                 <DropdownItem onClick={() => handleDropdownChange("High")}>High</DropdownItem>
               </DropdownMenu>
             </Dropdown>
+          </FormGroup>
+          <FormGroup>
+            <DatePicker selected={stringToDate(activeItem.due_date)} onChange={(date: Date) => handleDateChange(date)} />
           </FormGroup>
           <FormGroup check>
             <Label check>
