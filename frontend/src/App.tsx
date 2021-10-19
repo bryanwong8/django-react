@@ -3,9 +3,13 @@ import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
+import { formatDate } from "./shared/utils/dates";
 import axios from "axios";
+import Cookies from 'js-cookie';
+import "react-datepicker/dist/react-datepicker.css";
 
 const App = () => {
+  const csrftoken = Cookies.get('csrftoken');
   const [viewCompleted, setViewCompleted] = useState<boolean>(false);
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
   const [modal, setModal] = useState<boolean>(false);
@@ -13,6 +17,8 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
+    priority: "LOW",
+    due_date: formatDate(new Date())
   });
 
   useEffect(() => {
@@ -36,7 +42,7 @@ const App = () => {
     toggle();
 
     if (item.id) {
-      const response = await axios.put(`/api/todos/${item.id}/`, item)
+      const response = await axios.put(`/api/todos/${item.id}/`, item, { headers: { 'X-CSRFToken': csrftoken } })
       const editedList = todoList.map(currItem => {
         if (currItem.id === response.data.id) {
           return response.data;
@@ -50,17 +56,17 @@ const App = () => {
       return;
     }
 
-    const response = await axios.post("/api/todos/", item)
+    const response = await axios.post("/api/todos/", item, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => [...prevState, response.data])
   };
 
   const handleDelete = async (item: TodoItem) => {
-    await axios.delete(`/api/todos/${item.id}/`)
+    await axios.delete(`/api/todos/${item.id}`, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
 
   const createItem = () => {
-    const item = { title: "", description: "", completed: false };
+    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: formatDate(new Date()) };
 
     setActiveItem(item);
     setModal(!modal);

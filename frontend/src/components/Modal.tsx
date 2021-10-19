@@ -9,8 +9,14 @@ import {
   FormGroup,
   Input,
   Label,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
 import { TodoItem } from "../shared/types/Todo";
+import DatePicker from "react-datepicker";
+import { formatDate, stringToDate } from "../shared/utils/dates";
 
 interface ModalProps {
   activeItem: TodoItem,
@@ -19,7 +25,9 @@ interface ModalProps {
 }
 
 const CustomModal = (props: ModalProps) => {
-  const [activeItem, setActiveItem] = useState(props.activeItem);
+  const [activeItem, setActiveItem] = useState<TodoItem>(props.activeItem);
+  const [dropdown, setDropdown] = useState<boolean>(false);
+  const dropdownToggle = () => setDropdown(prevState => !prevState);
   const { toggle, onSave } = props;
 
   const handleChange = (e: any) => {
@@ -31,6 +39,14 @@ const CustomModal = (props: ModalProps) => {
 
     setActiveItem(prevState => ({ ...prevState, [name]: value }));
   };
+
+  const handleDropdownChange = (choice: string) => {
+    setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
+  }
+
+  const handleDateChange = (date: Date) => {
+    setActiveItem(prevState => ({ ...prevState, due_date: formatDate(date) }))
+  }
 
   return (
     <Modal isOpen={true} toggle={toggle}>
@@ -58,6 +74,21 @@ const CustomModal = (props: ModalProps) => {
               onChange={handleChange}
               placeholder="Enter Todo description"
             />
+          </FormGroup>
+          <FormGroup>
+            <Dropdown isOpen={dropdown} toggle={dropdownToggle}>
+              <DropdownToggle caret>
+                {activeItem.priority}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => handleDropdownChange("Low")}>Low</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange("Mid")}>Mid</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange("High")}>High</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </FormGroup>
+          <FormGroup>
+            <DatePicker selected={stringToDate(activeItem.due_date)} onChange={(date: Date) => handleDateChange(date)} />
           </FormGroup>
           <FormGroup check>
             <Label check>

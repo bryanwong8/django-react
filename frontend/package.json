@@ -10,10 +10,13 @@
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.0",
     "@types/react": "^17.0.30",
+    "@types/react-datepicker": "^4.1.7",
     "@types/react-dom": "^17.0.9",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "js-cookie": "^3.0.1",
     "react": "^17.0.2",
+    "react-datepicker": "^4.2.1",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "reactstrap": "^8.9.0",
@@ -43,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.0"
   }
 }
