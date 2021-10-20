@@ -1,6 +1,7 @@
 import React from "react";
 import { TodoItem } from "../shared/types/Todo";
-import { Button, Column, DataGrid, SearchPanel } from 'devextreme-react/data-grid';
+import { Button, Column, DataGrid, FilterRow, RemoteOperations } from 'devextreme-react/data-grid';
+import { createStore } from 'devextreme-aspnet-data-nojquery';
 
 interface TableItemsProps {
   todoList: TodoItem[],
@@ -11,15 +12,19 @@ interface TableItemsProps {
 
 const TableItems = (props: TableItemsProps) => {
   const { viewCompleted } = props;
-  const newItems = props.todoList.filter(
-    (item: TodoItem) => item.completed === viewCompleted
-  );
+  const dataSource = createStore({
+    key: 'id',
+    loadUrl: `/api/todoList?completed=${viewCompleted}`,
+  });
 
   return (
     <DataGrid
-      dataSource={newItems}
+      dataSource={dataSource}
     >
-      <SearchPanel visible={true} />
+      <RemoteOperations
+        filtering={true}
+      />
+      <FilterRow visible={true} />
       <Column
         dataField="title"
         caption="Title"
@@ -29,12 +34,6 @@ const TableItems = (props: TableItemsProps) => {
       <Column
         dataField="description"
         caption="Description"
-        dataType="string"
-        alignment="left"
-      />
-      <Column
-        dataField="completed"
-        caption="Completed"
         dataType="string"
         alignment="left"
       />

@@ -22,19 +22,6 @@ const App = () => {
     due_date: formatDate(new Date())
   });
 
-  useEffect(() => {
-    const getList = async () => {
-      try {
-        const response = await axios.get("/api/todos");
-        setTodoList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getList();
-  }, []);
-
   const toggle = () => {
     setModal(!modal);
   };
@@ -43,7 +30,7 @@ const App = () => {
     toggle();
 
     if (item.id) {
-      const response = await axios.put(`/api/todos/${item.id}/`, item, { headers: { 'X-CSRFToken': csrftoken } })
+      const response = await axios.put(`/api/todos/${item.id}`, item, { headers: { 'X-CSRFToken': csrftoken } })
       const editedList = todoList.map(currItem => {
         if (currItem.id === response.data.id) {
           return response.data;
