@@ -1,5 +1,7 @@
 import React from "react";
 import { TodoItem } from "../shared/types/Todo";
+import { Button, Column, DataGrid, SearchPanel } from 'devextreme-react/data-grid';
+
 interface TableItemsProps {
   todoList: TodoItem[],
   viewCompleted: boolean,
@@ -14,36 +16,53 @@ const TableItems = (props: TableItemsProps) => {
   );
 
   return (
-    <ul className="list-group list-group-flush border-top-0">
-      {newItems.map((item) => (
-        <li
-          key={item.id}
-          className="list-group-item d-flex justify-content-between align-items-center"
-        >
-          <span
-            className={`todo-title mr-2 ${props.viewCompleted ? "completed-todo" : ""
-              }`}
-            title={item.description}
-          >
-            {item.title}
-          </span>
-          <span>
-            <button
-              className="btn btn-secondary mr-2"
-              onClick={() => props.editItem(item)}
-            >
-              Edit
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => props.handleDelete(item)}
-            >
-              Delete
-            </button>
-          </span>
-        </li>
-      ))}
-    </ul>
+    <DataGrid
+      dataSource={newItems}
+    >
+      <SearchPanel visible={true} />
+      <Column
+        dataField="title"
+        caption="Title"
+        dataType="string"
+        alignment="left"
+      />
+      <Column
+        dataField="description"
+        caption="Description"
+        dataType="string"
+        alignment="left"
+      />
+      <Column
+        dataField="completed"
+        caption="Completed"
+        dataType="string"
+        alignment="left"
+      />
+      <Column
+        dataField="priority"
+        caption="Priority"
+        dataType="string"
+        alignment="left"
+      />
+      <Column
+        dataField="due_date"
+        caption="Due Date"
+        dataType="string"
+        alignment="left"
+      />
+      {/* Adding any to event so I can move on and not stay too long to create a type for it */}
+      <Column type="buttons">
+        <Button
+          text="Edit"
+          onClick={(e: any) => props.editItem(e.row.data)}
+        />
+        <Button
+          text="Delete"
+          onClick={(e: any) => props.handleDelete(e.row.data)}
+        />
+      </Column>
+
+    </DataGrid>
   )
 }
 

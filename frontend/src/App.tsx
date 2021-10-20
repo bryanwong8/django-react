@@ -7,6 +7,7 @@ import { formatDate } from "./shared/utils/dates";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import "react-datepicker/dist/react-datepicker.css";
+import 'devextreme/dist/css/dx.light.css';
 
 const App = () => {
   const csrftoken = Cookies.get('csrftoken');
