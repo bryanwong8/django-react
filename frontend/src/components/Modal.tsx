@@ -30,6 +30,7 @@ const CustomModal = (props: ModalProps) => {
   const dropdownToggle = () => setDropdown(prevState => !prevState);
   const { toggle, onSave } = props;
 
+  // Function to handle the title, description, and completed fields
   const handleChange = (e: any) => {
     let { name, value } = e.target;
 
@@ -40,10 +41,12 @@ const CustomModal = (props: ModalProps) => {
     setActiveItem(prevState => ({ ...prevState, [name]: value }));
   };
 
+  // Function to handle any dropdown field changes
   const handleDropdownChange = (choice: string) => {
     setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
   }
 
+  // Function to handle any datepicker changes
   const handleDateChange = (date: Date) => {
     setActiveItem(prevState => ({ ...prevState, due_date: formatDate(date) }))
   }

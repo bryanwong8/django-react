@@ -21,6 +21,7 @@ const TableItems = (props: TableItemsProps) => {
     <DataGrid
       dataSource={dataSource}
     >
+      {/* RemoteOperations allows us to select a few operations to be dealt with on the server side */}
       <RemoteOperations
         filtering={true}
       />
