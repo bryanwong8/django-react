@@ -19,10 +19,9 @@ from rest_framework import routers
 from todo import views
 
 router = routers.DefaultRouter()
-router.register(r"todos", views.TodoView, "todo")
+router.register(r"todos", views.TodoDx, "todo")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
-    path(r"api/todoList/", views.TodoListView.as_view()),
 ]
