@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "aa7f5fdf934909abd00a36f8171973a76fde8b5aedf710d894654e759183c202"
+            "sha256": "80de54737797791af2a1fd096640dc4be6d9cd3fe55347fae5ca596cd2135bd2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -47,6 +47,13 @@
             ],
             "index": "pypi",
             "version": "==3.12.4"
+        },
+        "drf-dx-datagrid": {
+            "hashes": [
+                "sha256:682490f8f189e9cb069dad25b9b6a9df42926aeeb9a2023c59b1e815335d2bc3"
+            ],
+            "index": "pypi",
+            "version": "==0.4.2"
         },
         "pytz": {
             "hashes": [

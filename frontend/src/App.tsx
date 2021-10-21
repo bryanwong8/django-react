@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
@@ -30,7 +30,7 @@ const App = () => {
     toggle();
 
     if (item.id) {
-      const response = await axios.put(`/api/todos/${item.id}`, item, { headers: { 'X-CSRFToken': csrftoken } })
+      const response = await axios.put(`/api/todos/${item.id}/`, item, { headers: { 'X-CSRFToken': csrftoken } })
       const editedList = todoList.map(currItem => {
         if (currItem.id === response.data.id) {
           return response.data;
@@ -49,7 +49,7 @@ const App = () => {
   };
 
   const handleDelete = async (item: TodoItem) => {
-    await axios.delete(`/api/todos/${item.id}`, { headers: { 'X-CSRFToken': csrftoken } })
+    await axios.delete(`/api/todos/${item.id}/`, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
 
