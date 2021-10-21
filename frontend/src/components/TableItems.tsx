@@ -14,7 +14,7 @@ const TableItems = (props: TableItemsProps) => {
   const { viewCompleted } = props;
   const dataSource = createStore({
     key: 'id',
-    loadUrl: `/api/todos`,
+    loadUrl: `/api/todos?completed=${viewCompleted}`,
   });
 
   return (

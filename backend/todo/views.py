@@ -1,11 +1,19 @@
 from drf_dx_datagrid import DxModelViewSet
-from rest_framework import generics
-from rest_framework import viewsets
 from .serializers import TodoSerializer
 from .models import Todo
-import ast
 
-# Create your views here.
-class TodoDx(DxModelViewSet):
+
+# DxModelViewSet handles the parsing of Devextreme query params
+class TodoView(DxModelViewSet):
     serializer_class = TodoSerializer
-    queryset = Todo.objects.all()
+
+    def get_queryset(self):
+        queryset = Todo.objects.all()
+        completed = self.request.query_params.get('completed')
+
+        if completed == "true":
+            completed = True
+        else:
+            completed = False
+
+        return queryset.filter(completed=completed)
