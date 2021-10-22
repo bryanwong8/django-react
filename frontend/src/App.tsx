@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
@@ -22,23 +22,11 @@ const App = () => {
     due_date: formatDate(new Date())
   });
 
-  useEffect(() => {
-    const getList = async () => {
-      try {
-        const response = await axios.get("/api/todos");
-        setTodoList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getList();
-  }, []);
-
   const toggle = () => {
     setModal(!modal);
   };
 
+  // Function to save/edit Todo items
   const handleSubmit = async (item: TodoItem) => {
     toggle();
 
@@ -61,11 +49,13 @@ const App = () => {
     setTodoList(prevState => [...prevState, response.data])
   };
 
+  // Function to delete a Todo item
   const handleDelete = async (item: TodoItem) => {
-    await axios.delete(`/api/todos/${item.id}`, { headers: { 'X-CSRFToken': csrftoken } })
+    await axios.delete(`/api/todos/${item.id}/`, { headers: { 'X-CSRFToken': csrftoken } })
     setTodoList(prevState => prevState.filter(currItem => currItem.id !== item.id))
   };
 
+  // Function to open an empty modal and creates and empty Todo item to fill it out
   const createItem = () => {
     const item = { title: "", description: "", completed: false, priority: "LOW", due_date: formatDate(new Date()) };
 
@@ -73,11 +63,13 @@ const App = () => {
     setModal(!modal);
   };
 
+  // Function to open a modal with the selected Todo item
   const editItem = (item: TodoItem) => {
     setActiveItem(item);
     setModal(!modal)
   };
 
+  // Function to display completed and uncompleted Todo items
   const displayCompleted = (status: boolean) => {
     if (status) {
       return setViewCompleted(true)
