@@ -1,6 +1,6 @@
 import React from "react";
 import { TodoItem } from "../shared/types/Todo";
-import { Button, Column, DataGrid, FilterRow, RemoteOperations } from 'devextreme-react/data-grid';
+import { Button, Column, DataGrid, FilterRow, Paging, Pager, RemoteOperations, } from 'devextreme-react/data-grid';
 import { createStore } from 'devextreme-aspnet-data-nojquery';
 
 interface TableItemsProps {
@@ -12,6 +12,7 @@ interface TableItemsProps {
 
 const TableItems = (props: TableItemsProps) => {
   const { viewCompleted } = props;
+  const displayMode = { text: 'Display Mode \'full\'', value: 'full' };
   const dataSource = createStore({
     key: 'id',
     loadUrl: `/api/todos?completed=${viewCompleted}`,
@@ -24,9 +25,17 @@ const TableItems = (props: TableItemsProps) => {
       {/* RemoteOperations allows us to select a few operations to be dealt with on the server side */}
       <RemoteOperations
         filtering={true}
+        paging={true}
         sorting={true}
       />
       <FilterRow visible={true} />
+      <Paging defaultPageSize={10} />
+      <Pager
+        visible={true}
+        displayMode={displayMode}
+        showPageSizeSelector={true}
+        showInfo={true}
+        showNavigationButtons={true} />
       <Column
         dataField="title"
         caption="Title"
