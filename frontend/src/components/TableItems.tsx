@@ -28,8 +28,10 @@ const TableItems = (props: TableItemsProps) => {
         paging={true}
         sorting={true}
       />
+      {/* FilterRow displays the filter inputs in each column */}
       <FilterRow visible={true} />
-      <Paging defaultPageSize={10} />
+      {/* Paging and Pager displays the paging components */}
+      <Paging defaultPageSize={5} />
       <Pager
         visible={true}
         displayMode={displayMode}
