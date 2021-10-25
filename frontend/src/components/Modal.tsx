@@ -17,7 +17,7 @@ import {
 import DatePicker from "react-datepicker";
 import { TodoItem } from "../shared/types/Todo";
 import { priority } from "../shared/enums/priority";
-import { formatDate, stringToDate } from "../shared/utils/dates";
+import { format, parseISO} from 'date-fns'
 
 interface ModalProps {
   activeItem: TodoItem,
@@ -30,6 +30,7 @@ const CustomModal = (props: ModalProps) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const dropdownToggle = () => setDropdown(prevState => !prevState);
   const { toggle, onSave } = props;
+  const parsedDate = format(parseISO(activeItem.due_date), "MM-dd-yyyy");
 
   // Function to handle the title, description, and completed fields
   const handleChange = (e: any) => {
@@ -49,7 +50,8 @@ const CustomModal = (props: ModalProps) => {
 
   // Function to handle any datepicker changes
   const handleDateChange = (date: Date) => {
-    setActiveItem(prevState => ({ ...prevState, due_date: formatDate(date) }))
+    const formattedDate = format(date, 'yyyy-MM-dd');
+    setActiveItem(prevState => ({ ...prevState, due_date: formattedDate }))
   }
 
   return (
@@ -92,7 +94,7 @@ const CustomModal = (props: ModalProps) => {
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <DatePicker selected={stringToDate(activeItem.due_date)} onChange={(date: Date) => handleDateChange(date)} />
+            <DatePicker selected={new Date(parsedDate)} onChange={(date: Date) => handleDateChange(date)} />
           </FormGroup>
           <FormGroup check>
             <Label check>

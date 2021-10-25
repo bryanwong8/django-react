@@ -4,9 +4,9 @@ import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
 import { priority } from "./shared/enums/priority";
-import { formatDate } from "./shared/utils/dates";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { format } from 'date-fns'
 import "react-datepicker/dist/react-datepicker.css";
 import 'devextreme/dist/css/dx.light.css';
 
@@ -20,7 +20,7 @@ const App = () => {
     description: "",
     completed: false,
     priority: priority.LOW,
-    due_date: formatDate(new Date())
+    due_date: format(new Date(), 'yyyy-MM-dd')
   });
 
   const toggle = () => {
@@ -58,7 +58,7 @@ const App = () => {
 
   // Function to open an empty modal and creates and empty Todo item to fill it out
   const createItem = () => {
-    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: formatDate(new Date()) };
+    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: format(new Date(), 'yyyy-MM-dd') };
 
     setActiveItem(item);
     setModal(!modal);
