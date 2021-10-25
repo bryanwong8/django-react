@@ -24,6 +24,7 @@ const TableItems = (props: TableItemsProps) => {
       {/* RemoteOperations allows us to select a few operations to be dealt with on the server side */}
       <RemoteOperations
         filtering={true}
+        sorting={true}
       />
       <FilterRow visible={true} />
       <Column
