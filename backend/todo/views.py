@@ -1,3 +1,4 @@
+from django.db.models import query
 from drf_dx_datagrid import DxModelViewSet
 from .serializers import TodoSerializer
 from .models import Todo
@@ -11,9 +12,12 @@ class TodoView(DxModelViewSet):
         queryset = Todo.objects.all()
         completed = self.request.query_params.get('completed')
 
+        # If the flag exists, then filter
         if completed == "true":
-            completed = True
+                completed = True
+        elif completed == "false":
+                completed = False
         else:
-            completed = False
+            return queryset
 
         return queryset.filter(completed=completed)

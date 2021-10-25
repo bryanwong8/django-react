@@ -14,8 +14,9 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import { TodoItem } from "../shared/types/Todo";
 import DatePicker from "react-datepicker";
+import { TodoItem } from "../shared/types/Todo";
+import { priority } from "../shared/enums/priority";
 import { formatDate, stringToDate } from "../shared/utils/dates";
 
 interface ModalProps {
@@ -84,9 +85,9 @@ const CustomModal = (props: ModalProps) => {
                 {activeItem.priority}
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => handleDropdownChange("Low")}>Low</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange("Mid")}>Mid</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange("High")}>High</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange(priority.LOW)}>Low</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange(priority.MID)}>Mid</DropdownItem>
+                <DropdownItem onClick={() => handleDropdownChange(priority.HIGH)}>High</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </FormGroup>

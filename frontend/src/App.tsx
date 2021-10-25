@@ -3,6 +3,7 @@ import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
+import { priority } from "./shared/enums/priority";
 import { formatDate } from "./shared/utils/dates";
 import axios from "axios";
 import Cookies from 'js-cookie';
@@ -18,7 +19,7 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
-    priority: "LOW",
+    priority: priority.LOW,
     due_date: formatDate(new Date())
   });
 
