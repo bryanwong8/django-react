@@ -1,14 +1,54 @@
 from rest_framework import filters, viewsets
 from .serializers import TodoSerializer
 from .models import Todo
+import json
+
+
+# Function to convert the filters to a dictionary to make it easier to filter
+def convert_filters_to_dict(filters):
+    filter_dict = {}
+
+    # If this is the case then we have a 2d list of filters(two filters or more)
+    if isinstance(filters[0], list):
+        for i in range(len(filters)):
+            if isinstance(filters[i], list):
+                curr_filter = filters[i]
+                filter_dict[curr_filter[0]] = curr_filter[2]
+    # We have a 1d array and can just pull the attributes out(only occurs when there is only one filter applied)
+    else:
+        filter_dict[filters[0]] = filters[2]
+
+    return filter_dict
+
+
+class DevExtremeFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        """Filter queryset by title"""
+
+        filters = request.query_params.get("filter")
+
+        if filters:
+            filters = json.loads(filters)
+            filter_dict = convert_filters_to_dict(filters)
+
+            # Loops through filter dictionary and applies appropriate filters
+            for key, val in filter_dict.items():
+                if key == "title":
+                    queryset = queryset.filter(title=val)
+                elif key == "description":
+                    queryset = queryset.filter(description=val)
+                elif key == "priority":
+                    queryset = queryset.filter(priority=val.uppper())
+                elif key == "due_date":
+                    queryset = queryset.filter(due_date=val)
+
+        return queryset
 
 
 class CompletedFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         """Filter queryset by completed"""
 
-        print(request.query_params)
-        print(queryset)
         completed = request.query_params.get("completed")
 
         # If the flag exists, then filter
@@ -26,4 +66,4 @@ class CompletedFilter(filters.BaseFilterBackend):
 class TodoView(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
-    filter_backends = [CompletedFilter]
+    filter_backends = [CompletedFilter, DevExtremeFilter]
