@@ -1,23 +1,29 @@
-from django.db.models import query
-from drf_dx_datagrid import DxModelViewSet
+from rest_framework import filters, viewsets
 from .serializers import TodoSerializer
 from .models import Todo
 
 
-# DxModelViewSet handles the parsing of Devextreme query params
-class TodoView(DxModelViewSet):
-    serializer_class = TodoSerializer
+class CompletedFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        """Filter queryset by completed"""
 
-    def get_queryset(self):
-        queryset = Todo.objects.all()
-        completed = self.request.query_params.get('completed')
+        print(request.query_params)
+        print(queryset)
+        completed = request.query_params.get("completed")
 
         # If the flag exists, then filter
         if completed == "true":
-                completed = True
+            completed = True
         elif completed == "false":
-                completed = False
+            completed = False
         else:
             return queryset
 
         return queryset.filter(completed=completed)
+
+
+# View to handle CRUD routes
+class TodoView(viewsets.ModelViewSet):
+    serializer_class = TodoSerializer
+    queryset = Todo.objects.all()
+    filter_backends = [CompletedFilter]
