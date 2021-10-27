@@ -21,9 +21,10 @@ def convert_filters_to_dict(filters):
     return filter_dict
 
 
+# Class to apply filter params from DevExtreme
 class DevExtremeFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
-        """Filter queryset by title"""
+        """Filter queryset by DevExtreme parameters"""
 
         filters = request.query_params.get("filter")
 
@@ -38,12 +39,31 @@ class DevExtremeFilter(filters.BaseFilterBackend):
                 elif key == "description":
                     queryset = queryset.filter(description=val)
                 elif key == "priority":
-                    queryset = queryset.filter(priority=val.uppper())
+                    queryset = queryset.filter(priority=val.upper())
                 elif key == "due_date":
                     queryset = queryset.filter(due_date=val)
 
         return queryset
 
+
+# Class to order data
+class DevExtremeOrdering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        """Order queryset by DevExtreme parameters"""
+        print(request.query_params)
+        sort_params = request.query_params.get("sort")
+
+        if sort_params:
+            sort_params = json.loads(sort_params)[0]
+            param = sort_params["selector"]
+
+            # If the desc variable is True we need to add the '-' to order by descending order
+            if sort_params['desc']:
+                param = "-" + param
+
+            return queryset.order_by(param)
+            
+        return queryset
 
 class CompletedFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
@@ -66,4 +86,4 @@ class CompletedFilter(filters.BaseFilterBackend):
 class TodoView(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
-    filter_backends = [CompletedFilter, DevExtremeFilter]
+    filter_backends = [CompletedFilter, DevExtremeFilter, DevExtremeOrdering]
