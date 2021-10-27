@@ -50,7 +50,6 @@ class DevExtremeFilter(filters.BaseFilterBackend):
 class DevExtremeOrdering(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         """Order queryset by DevExtreme parameters"""
-        print(request.query_params)
         sort_params = request.query_params.get("sort")
 
         if sort_params:
@@ -58,12 +57,13 @@ class DevExtremeOrdering(filters.BaseFilterBackend):
             param = sort_params["selector"]
 
             # If the desc variable is True we need to add the '-' to order by descending order
-            if sort_params['desc']:
+            if sort_params["desc"]:
                 param = "-" + param
 
             return queryset.order_by(param)
-            
+
         return queryset
+
 
 class CompletedFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
