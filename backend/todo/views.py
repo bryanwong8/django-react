@@ -1,4 +1,4 @@
-from rest_framework import filters, viewsets
+from rest_framework import filters, pagination, viewsets
 from .serializers import TodoSerializer
 from .models import Todo
 import json
@@ -47,15 +47,10 @@ class DevExtremeFilter(filters.BaseFilterBackend):
 
 
 # Class to apply pagination from DevExtreme
-class DevExtremePagination(filters.BaseFilterBackend):
-
-    def filter_queryset(self, request, queryset, view):
-        """Paging queryset by DevExtreme parameters"""
-
-        start_range = int(request.query_params.get("skip"))
-        end_range = int(request.query_params.get("take")) + start_range
-
-        return queryset[start_range:end_range]
+class DevExtremePagination(pagination.LimitOffsetPagination):
+    default_limit = 5
+    limit_query_param = "take"
+    offset_query_param = "skip"
 
 
 # Class to order data from DevExtreme
@@ -103,5 +98,5 @@ class TodoView(viewsets.ModelViewSet):
         CompletedFilter,
         DevExtremeFilter,
         DevExtremeOrdering,
-        DevExtremePagination,
     ]
+    pagination_class = DevExtremePagination
