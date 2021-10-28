@@ -48,9 +48,10 @@ class DevExtremeFilter(filters.BaseFilterBackend):
 
 # Class to apply pagination from DevExtreme
 class DevExtremePagination(filters.BaseFilterBackend):
-    """Paging queryset by DevExtreme parameters"""
 
     def filter_queryset(self, request, queryset, view):
+        """Paging queryset by DevExtreme parameters"""
+
         start_range = int(request.query_params.get("skip"))
         end_range = int(request.query_params.get("take")) + start_range
 
