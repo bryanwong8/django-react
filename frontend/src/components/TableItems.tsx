@@ -35,7 +35,7 @@ const TableItems = (props: TableItemsProps) => {
       <Pager
         visible={true}
         displayMode={displayMode}
-        showPageSizeSelector={true}
+        showPageSizeSelector={false}
         showInfo={true}
         showNavigationButtons={true} />
       <Column

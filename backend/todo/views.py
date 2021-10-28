@@ -46,7 +46,18 @@ class DevExtremeFilter(filters.BaseFilterBackend):
         return queryset
 
 
-# Class to order data
+# Class to apply pagination from DevExtreme
+class DevExtremePagination(filters.BaseFilterBackend):
+    """Paging queryset by DevExtreme parameters"""
+
+    def filter_queryset(self, request, queryset, view):
+        start_range = int(request.query_params.get("skip"))
+        end_range = int(request.query_params.get("take")) + start_range
+
+        return queryset[start_range:end_range]
+
+
+# Class to order data from DevExtreme
 class DevExtremeOrdering(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         """Order queryset by DevExtreme parameters"""
@@ -65,6 +76,7 @@ class DevExtremeOrdering(filters.BaseFilterBackend):
         return queryset
 
 
+# Class to filter out completed and incompleted Todos
 class CompletedFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         """Filter queryset by completed"""
@@ -86,4 +98,9 @@ class CompletedFilter(filters.BaseFilterBackend):
 class TodoView(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
-    filter_backends = [CompletedFilter, DevExtremeFilter, DevExtremeOrdering]
+    filter_backends = [
+        CompletedFilter,
+        DevExtremeFilter,
+        DevExtremeOrdering,
+        DevExtremePagination,
+    ]
