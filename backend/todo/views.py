@@ -35,13 +35,13 @@ class DevExtremeFilter(filters.BaseFilterBackend):
             # Loops through filter dictionary and applies appropriate filters
             for key, val in filter_dict.items():
                 if key == "title":
-                    queryset = queryset.filter(title=val)
+                    queryset = queryset.filter(title__icontains=val)
                 elif key == "description":
-                    queryset = queryset.filter(description=val)
+                    queryset = queryset.filter(description__icontains=val)
                 elif key == "priority":
-                    queryset = queryset.filter(priority=val.upper())
+                    queryset = queryset.filter(priority__icontains=val.upper())
                 elif key == "due_date":
-                    queryset = queryset.filter(due_date=val)
+                    queryset = queryset.filter(due_date__icontains=val)
 
         return queryset
 

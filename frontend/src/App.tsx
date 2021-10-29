@@ -3,7 +3,7 @@ import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
-import { priority } from "./shared/enums/priority";
+import { Priority } from "./shared/enums/priority";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { format } from 'date-fns'
@@ -19,7 +19,7 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
-    priority: priority.LOW,
+    priority: Priority.Low,
     due_date: format(new Date(), 'yyyy-MM-dd')
   });
 
@@ -58,7 +58,7 @@ const App = () => {
 
   // Function to open an empty modal and creates and empty Todo item to fill it out
   const createItem = () => {
-    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: format(new Date(), 'yyyy-MM-dd') };
+    const item = { title: "", description: "", completed: false, priority: Priority.Low, due_date: format(new Date(), 'yyyy-MM-dd') };
 
     setActiveItem(item);
     setModal(!modal);
