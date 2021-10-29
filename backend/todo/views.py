@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework import filters, pagination, viewsets
 from .serializers import TodoSerializer
 from .models import Todo
@@ -39,7 +40,7 @@ class DevExtremeFilter(filters.BaseFilterBackend):
                 elif key == "description":
                     queryset = queryset.filter(description__icontains=val)
                 elif key == "priority":
-                    queryset = queryset.filter(priority__icontains=val.upper())
+                    queryset = queryset.filter(priority__icontains=val)
                 elif key == "due_date":
                     queryset = queryset.filter(due_date__icontains=val)
 
@@ -62,12 +63,10 @@ class DevExtremeOrdering(filters.BaseFilterBackend):
         if sort_params:
             sort_params = json.loads(sort_params)[0]
             param = sort_params["selector"]
+            queryset = queryset.order_by(param)
 
-            # If the desc variable is True we need to add the '-' to order by descending order
             if sort_params["desc"]:
-                param = "-" + param
-
-            return queryset.order_by(param)
+                return queryset.order_by(F(param).desc())
 
         return queryset
 

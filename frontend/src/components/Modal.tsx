@@ -94,7 +94,7 @@ const CustomModal = (props: ModalProps) => {
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <DatePicker selected={new Date(parsedDate)} onChange={(date: Date) => handleDateChange(date)} />
+            <DatePicker selected={new Date(parsedDate)} onChange={handleDateChange} />
           </FormGroup>
           <FormGroup check>
             <Label check>
