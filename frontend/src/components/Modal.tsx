@@ -14,9 +14,10 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import { TodoItem } from "../shared/types/Todo";
 import DatePicker from "react-datepicker";
-import { formatDate, stringToDate } from "../shared/utils/dates";
+import { TodoItem } from "../shared/types/Todo";
+import { Priority } from "../shared/enums/priority";
+import { format, parseISO} from 'date-fns'
 
 interface ModalProps {
   activeItem: TodoItem,
@@ -29,6 +30,7 @@ const CustomModal = (props: ModalProps) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const dropdownToggle = () => setDropdown(prevState => !prevState);
   const { toggle, onSave } = props;
+  const parsedDate = format(parseISO(activeItem.due_date), "MM-dd-yyyy");
 
   // Function to handle the title, description, and completed fields
   const handleChange = (e: any) => {
@@ -42,13 +44,15 @@ const CustomModal = (props: ModalProps) => {
   };
 
   // Function to handle any dropdown field changes
-  const handleDropdownChange = (choice: string) => {
-    setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
+  const handleDropdownChange = (e: any) => {
+    const choice = e.target.dataset.choice;
+    setActiveItem(prevState => ({ ...prevState, priority: choice }));
   }
 
   // Function to handle any datepicker changes
   const handleDateChange = (date: Date) => {
-    setActiveItem(prevState => ({ ...prevState, due_date: formatDate(date) }))
+    const formattedDate = format(date, 'yyyy-MM-dd');
+    setActiveItem(prevState => ({ ...prevState, due_date: formattedDate }))
   }
 
   return (
@@ -84,14 +88,14 @@ const CustomModal = (props: ModalProps) => {
                 {activeItem.priority}
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => handleDropdownChange("Low")}>Low</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange("Mid")}>Mid</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange("High")}>High</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.Low}>Low</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.Mid}>Mid</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.High}>High</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <DatePicker selected={stringToDate(activeItem.due_date)} onChange={(date: Date) => handleDateChange(date)} />
+            <DatePicker selected={new Date(parsedDate)} onChange={handleDateChange} />
           </FormGroup>
           <FormGroup check>
             <Label check>

@@ -3,9 +3,10 @@ import CustomModal from "./components/Modal";
 import TableItems from "./components/TableItems";
 import TabList from "./components/TabList";
 import { TodoItem } from "./shared/types/Todo";
-import { formatDate } from "./shared/utils/dates";
+import { Priority } from "./shared/enums/priority";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { format } from 'date-fns'
 import "react-datepicker/dist/react-datepicker.css";
 import 'devextreme/dist/css/dx.light.css';
 
@@ -18,8 +19,8 @@ const App = () => {
     title: "",
     description: "",
     completed: false,
-    priority: "LOW",
-    due_date: formatDate(new Date())
+    priority: Priority.Low,
+    due_date: format(new Date(), 'yyyy-MM-dd')
   });
 
   const toggle = () => {
@@ -57,7 +58,7 @@ const App = () => {
 
   // Function to open an empty modal and creates and empty Todo item to fill it out
   const createItem = () => {
-    const item = { title: "", description: "", completed: false, priority: "LOW", due_date: formatDate(new Date()) };
+    const item = { title: "", description: "", completed: false, priority: Priority.Low, due_date: format(new Date(), 'yyyy-MM-dd') };
 
     setActiveItem(item);
     setModal(!modal);
@@ -80,7 +81,7 @@ const App = () => {
 
   return (
     <main className="container">
-      <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
+      <h1 className="text-uppercase text-center my-4">Todo app</h1>
       <div className="row">
         <div className="col-md-6 col-sm-10 mx-auto p-0">
           <div className="card p-3">
