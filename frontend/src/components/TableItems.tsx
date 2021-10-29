@@ -19,7 +19,6 @@ const TableItems = (props: TableItemsProps) => {
   const isNotEmpty = (value: any) => {
     return value !== undefined && value !== null && value !== '';
   }
-
   
   const dataSource = new CustomStore({
     key: 'id',

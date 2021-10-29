@@ -44,8 +44,9 @@ const CustomModal = (props: ModalProps) => {
   };
 
   // Function to handle any dropdown field changes
-  const handleDropdownChange = (choice: string) => {
-    setActiveItem(prevState => ({ ...prevState, priority: choice.toUpperCase() }))
+  const handleDropdownChange = (e: any) => {
+    const choice = e.target.dataset.choice;
+    setActiveItem(prevState => ({ ...prevState, priority: choice }));
   }
 
   // Function to handle any datepicker changes
@@ -87,9 +88,9 @@ const CustomModal = (props: ModalProps) => {
                 {activeItem.priority}
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => handleDropdownChange(Priority.Low)}>Low</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange(Priority.Mid)}>Mid</DropdownItem>
-                <DropdownItem onClick={() => handleDropdownChange(Priority.High)}>High</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.Low}>Low</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.Mid}>Mid</DropdownItem>
+                <DropdownItem onClick={handleDropdownChange} data-choice={Priority.High}>High</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </FormGroup>
